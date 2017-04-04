@@ -38,6 +38,7 @@
 #define CT_CPY_PST                                       2
 #define CT_CLS_QIT                                       3
 #define TD_AT_CLOSE                                      4
+#define TD_VI_QUIT                                       5
 
 
 
@@ -49,54 +50,54 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Layer 0: Basic layer
  *
  * ,---------------------------------------------------.         ,---------------------------------------------------.
- * |         |  F13 |  F1  |  F2  |  F3  |  F4  | LEFT |         | RIGHT| Undo | Redo | Save |      |      |   @^  LK|
+ * |   F13   |  F1  |  F2  |  F3  |  F4  |  F5  | Save |         | Save | Undo | Redo |      |      |      |   @   LK|
  * |---------+------+------+------+------+-------------|         |------+------+------+------+------+------+---------|
- * |CLOS QUIT|  ;:  |  ,<  |  .>  |   P  |   Y  |   _  |         |  L1  |   F  |   G  |   C  |   C  |   R  |   #`    |
- * |---------+------+------+------+------+------|   -  |         |      |------+------+------+------+------+---------|
- * |$~ LShift|   A  |   O  |   E  |   U  |   I  |------|         |------|   D  |   H  |   T  |   N  |   S  |\| RShift|
+ * |CLOS QUIT|  ;:  |  ,<  |  .>  |   P  |   Y  |      |         |  _   |   F  |   G  |   C  |   C  |   R  |   #     |
+ * |---------+------+------+------+------+------|      |         |  -   |------+------+------+------+------+---------|
+ * | LShift  |   A  |   O  |   E  |   U  |   I  |------|         |------|   D  |   H  |   T  |   N  |   S  |\| RShift|
  * |---------+------+------+------+------+------| Hyper|         | TAB  |------+------+------+------+------+---------|
- * |&% Cmd   |  '"  |   Q  |   Q  |   J  |   K  |      |         | Meh  |   B  |   M  |   W  |   V  |   Z  |/? Cmd   |
+ * |`~ Cmd   |  '"  |   Q  |   Q  |   J  |   K  |      |         | Meh  |   B  |   M  |   W  |   V  |   Z  |/? Cmd   |
  * `---------+------+------+------+------+-------------'         `-------------+------+------+------+------+---------'
- *   |  CTL  |  ALT |      | Left | Right|                                     |  Up  | Down |      |  CTL |  ALT  |
+ *   |  CTL  |  ALT |  L1  | Left | Right|                                     |  Up  | Down |  L1  |  CTL |  ALT  |
  *   `-----------------------------------'                                     `----------------------------------'
  *                                        ,-------------.       ,---------------.
- *                                        |  L1  |  L2  |       | Alt  |Esc/Caps|
- *                                 ,------|------|------|       |------+--------+------.
- *                                 |      |  CP  | Home |       | PgUp |        |      |
- *                                 | BkSp |  PST |------|       |------| Enter  | Space|
- *                                 |      |  CT  | End  |       | PgDn |        |      |
+ *                                        |      |  L2  |       |Esc/Caps|      |
+ *                                 ,------|------|------|       |--------+------+------.
+ *                                 |      |  CP  | Home |       |  PgUp  |      |      |
+ *                                 | BkSp |  PST |------|       |--------|Enter | Space|
+ *                                 |      |  CT  | End  |       |  PgDn  |      |      |
  *                                 `--------------------'       `----------------------'
  */
 [BASE] = KEYMAP(
        // left hand
        //TD(CT_CPY_PST),F(KEY_7_LBRK),  F(KEY_5_LCBR), F(KEY_3_RCBR), F(KEY_1_LPRN), F(KEY_9_EQLS),  KC_LEFT,
-       _______,       KC_F13,         KC_F1,         KC_F2,         KC_F3,         KC_F4,          KC_LEFT,
-       TD(CT_CLS_QIT),KC_SCLN,        KC_COMM,       KC_DOT,        KC_P,          KC_Y,           KC_MINS,
-       SFT_T(KC_DLR), KC_A,           KC_O,          KC_E,          KC_U,          KC_I,
-       GUI_T(KC_TAB), KC_QUOT,        KC_Q,          KC_J,          KC_K,          KC_X,           KC_HYPR,
+       KC_F13,        KC_F1,          KC_F2,         KC_F3,         KC_F4,         KC_F5,          TD(TD_VI_QUIT),
+       TD(CT_CLS_QIT),KC_SCLN,        KC_COMM,       KC_DOT,        KC_P,          KC_Y,           _______,
+       KC_LSHIFT,     KC_A,           KC_O,          KC_E,          KC_U,          KC_I,
+       GUI_T(KC_GRV), KC_QUOT,        KC_Q,          KC_J,          KC_K,          KC_X,           KC_HYPR,
  
        // lower keys
-                      KC_LCTRL,       KC_LALT,       _______,       KC_LEFT,       KC_RGHT,
+                      KC_LCTRL,       KC_LALT,       TG(SYMBOL),    KC_LEFT,       KC_RGHT,
  
        // thumb cluster
-                                                                                   TG(SYMBOL),     TG(KEY_NAV),
+                                                                                   _______,        TG(KEY_NAV),
                                                                                                    KC_HOME,
                                                                     KC_BSPC,       TD(CT_CPY_PST), KC_END,
  
        // right hand
        //KC_RGHT,       F(KEY_0_ASTR),  F(KEY_2_RPRN), F(KEY_4_PLUS), F(KEY_6_RBRK), F(KEY_8_EXLM),   TD(TD_AT_CLOSE),
-       KC_RGHT,       M(MC_UNDO),     M(MC_REDO),    M(MC_SAVE),    _______,       _______,         TD(TD_AT_CLOSE),
-       OSL(SYMBOL),   KC_F,           KC_G,          KC_C,          KC_R,          KC_L,            KC_HASH,
+       M(MC_SAVE),    M(MC_UNDO),     M(MC_REDO),    _______,       _______,       _______,         TD(TD_AT_CLOSE),
+       KC_MINS,       KC_F,           KC_G,          KC_C,          KC_R,          KC_L,            KC_HASH,
                       KC_D,           KC_H,          KC_T,          KC_N,          KC_S,            SFT_T(KC_BSLS),
        MEH_T(KC_TAB), KC_B,           KC_M,          KC_W,          KC_V,          KC_Z,            GUI_T(KC_SLSH),
  
        // lower keys
-                      KC_UP,          KC_DOWN,       _______,       KC_LCTRL,      KC_LALT,
+                      KC_UP,          KC_DOWN,       OSL(SYMBOL),   KC_LCTRL,      KC_LALT,
  
        // thumb cluster
-       KC_RALT,       TD(TD_ESC_CAPS),
+       TD(TD_ESC_CAPS), _______,
        KC_PGUP,
-       KC_PGDN,       KC_ENT,         KC_SPC
+       KC_PGDN,         KC_ENT,         KC_SPC
     ),
 
 /* Layer 1: Symbol Layer
@@ -104,16 +105,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,--------------------------------------------------.           ,--------------------------------------------------.
  * |   F13  |  F1  |  F2  |  F3  |  F4  |  F5  |      |           |      |  F6  |  F7  |  F8  |  F9  |  F10 |   F11  |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
- * |  ^F16  |   !  |   @  |   {  |   }  |   |  |      |           |  L0  |   Up |   7  |   8  |   9  |   *  |   F12  |
+ * |  ^F16  |   &  |   @  |   {  |   }  |   !  |   |  |           |      |   Up |   7  |   8  |   9  |   *  |   F12  |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
  * |   F16  |   #  |   $  |   (  |   )  |   `  |------|           |------| Down |   4  |   5  |   6  |   +  |        |
  * |--------+------+------+------+------+------|   ?  |           |      |------+------+------+------+------+--------|
  * |        |   %  |   ^  |   [  |   ]  |   ~  |      |           |      |   .  |   1  |   2  |   3  |   \  |    /   |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   |      |      |      | Left | Right|                                       |   0  |   .  |   0  |   =  |      |
+ *   | CTL  |  ALT |  L0  | Left | Right|                                       |   0  |   .  |  L0  |   =  |      |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
- *                                        |  L0  |      |       |      |      |
+ *                                        |      |      |       |      |      |
  *                                 ,------|------|------|       |------+------+------.
  *                                 |      |      |      |       |      |      |      |
  *                                 | BkSp |      |------|       |------|  =   | Space|
@@ -123,12 +124,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [SYMBOL] = KEYMAP(
        // left hand
        KC_F13,        KC_F1,          KC_F2,         KC_F3,         KC_F4,         KC_F5,          _______,
-       LCTL(KC_F16),  KC_EXLM,        KC_AT,         KC_LCBR,       KC_RCBR,       KC_PIPE,        _______,
+       LCTL(KC_F16),  KC_AMPR,        KC_AT,         KC_LCBR,       KC_RCBR,       KC_EXLM,        KC_PIPE,
        KC_F16,        KC_HASH,        KC_DLR,        KC_LPRN,       KC_RPRN,       KC_GRV,
        _______,       KC_PERC,        KC_CIRC,       KC_LBRC,       KC_RBRC,       KC_TILD,        KC_QUES,
  
        // lower keys
-                      _______,        _______,       _______,       KC_LEFT,       KC_RGHT,
+                      KC_LCTRL,       KC_LALT,       _______,       KC_LEFT,       KC_RGHT,
  
        // thumb cluster
                                                                                    _______,        _______,
@@ -141,7 +142,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                       KC_DOWN,        KC_4,          KC_5,          KC_6,          KC_PLUS,        _______,
        _______,       KC_DOT,         KC_1,          KC_2,          KC_3,          KC_BSLS,        KC_SLSH,
  
-                      KC_0,           KC_DOT,        KC_0,          KC_EQL,        _______,
+                      KC_0,           KC_DOT,        _______,       KC_EQL,        _______,
  
        // thumb cluster
        _______,       _______,
@@ -154,13 +155,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,---------------------------------------------------.         ,---------------------------------------------------.
  * |         |      |      |      |      |      |      |         |      |      |      |      |      |      |         |
  * |---------+------+------+------+------+-------------|         |------+------+------+------+------+------+---------|
- * |         |      |      |      |      |      |      |         |      | Frm U| Home |  Up  |  End | Frm D| Cpy Line|
+ * |         |      |      |      |      |      |      |         |      |      | Home |  Up  |  End |      | Cpy Line|
  * |---------+------+------+------+------+------|      |         |      |------+------+------+------+------+---------|
- * |         |      |      |      |      |      |------|         |------| Frm L| Left | Dovn | Right| Frm R| Cut Line|
+ * |         |      |      |      |      |      |------|         |------|      | Left | Dovn | Right|      | Cut Line|
  * |---------+------+------+------+------+------|      |         |      |------+------+------+------+------+---------|
- * |         |      |      |      |      |      |      |         |      | Tab L| PgDn |      | PgUp | Tab R| Pst Line|
+ * |   Cmd   |      |      |      |      |      |      |         |      |      | PgDn |      | PgUp |      | Pst Line|
  * `---------+------+------+------+------+-------------'         `-------------+------+------+------+------+---------'
- *   |       |      |      |      |      |                                     |      |      |      |      |      |
+ *   |  CTL  |  ALT |      |      |      |                                     |      |      |      |      |      |
  *   `-----------------------------------'                                     `----------------------------------'
  *                                        ,-------------.       ,-------------.
  *                                        |      |  L0  |       |      |        |
@@ -175,18 +176,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        _______,_______,_______,_______,_______,_______,_______,
        _______,_______,_______,_______,_______,_______,_______,
        _______,_______,_______,_______,_______,_______,
-       _______,_______,_______,_______,_______,_______,_______,
+       KC_LGUI,_______,_______,_______,_______,_______,_______,
                // bottom row
-               _______,_______,_______,_______,_______,
+               KC_LCTRL, KC_LALT,_______,_______,_______,
                                        // thumb cluster
                                        _______,_______,
                                                _______,
                                _______,_______,_______,
        // right hand
        _______, _______,        _______,    _______,    _______,    _______,        _______,
-       _______, CTLG(KC_UP),    KC_HOME,    KC_UP,      KC_END,     CTLG(KC_DOWN),  M(MC_COPY_LINE),
-                CTLG(KC_LEFT),  KC_LEFT,    KC_DOWN,    KC_RIGHT,   CTLG(KC_RIGHT), M(MC_CUT_LINE),
-       _______, RGUI(KC_LEFT),  KC_PGDN,    _______,    KC_PGUP,    RGUI(KC_RIGHT), M(MC_PASTE_LINE),
+       _______, _______,        KC_HOME,    KC_UP,      KC_END,     _______,        M(MC_COPY_LINE),
+                _______,        KC_LEFT,    KC_DOWN,    KC_RIGHT,   _______,        M(MC_CUT_LINE),
+       _______, _______,        KC_PGDN,    _______,    KC_PGUP,    _______,        M(MC_PASTE_LINE),
                 // bottom row
                 _______, _______, _______,  _______,    _______,
        // thumb cluster
@@ -395,13 +396,28 @@ void close_quit(qk_tap_dance_state_t *state, void *user_data)
   }
 }
 
+void vi_quit(qk_tap_dance_state_t *state, void *user_data)
+{
+  if (state->count == 1)
+  {
+    // Write Quit
+    MACRO( T(ESC), D(LSHIFT), T(SCLN), U(LSHIFT), T(W), T(Q) );
+  }
+  else if (state->count == 2)
+  {
+    // Quit Out
+    MACRO( T(ESC), D(LSHIFT), T(SCLN), U(LSHIFT), T(Q), D(LSHIFT), T(1), U(LSHIFT) );
+  }
+}
+
 
 qk_tap_dance_action_t tap_dance_actions[] = {
   [TD_ESC_CAPS]  = ACTION_TAP_DANCE_DOUBLE(KC_ESC, KC_CAPS),
   [CT_SPC_ENT]   = ACTION_TAP_DANCE_DOUBLE(KC_SPC, KC_ENT),
   [CT_CPY_PST]   = ACTION_TAP_DANCE_FN(copy_paste),
   [CT_CLS_QIT]   = ACTION_TAP_DANCE_FN(close_quit),
-  [TD_AT_CLOSE]  = ACTION_TAP_DANCE_DOUBLE(KC_AT, KC_INS)
+  [TD_AT_CLOSE]  = ACTION_TAP_DANCE_DOUBLE(KC_AT, KC_INS),
+  [TD_VI_QUIT]   = ACTION_TAP_DANCE_FN(vi_quit)
 };
 
 
