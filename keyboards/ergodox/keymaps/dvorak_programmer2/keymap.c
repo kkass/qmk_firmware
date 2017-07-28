@@ -21,6 +21,7 @@
 #define MC_UNDO                                          3
 #define MC_REDO                                          4
 #define MC_SAVE                                          5
+#define MC_LOCK                                          6
 
 #define KEY_7_LBRK                                       0
 #define KEY_5_LCBR                                       1
@@ -396,27 +397,99 @@ void close_quit(qk_tap_dance_state_t *state, void *user_data)
   }
 }
 
+#define type_code(X)  register_code(X); unregister_code(X)
+
 void vi_quit(qk_tap_dance_state_t *state, void *user_data)
 {
   if (state->count == 1)
   {
-    // Write Quit
-    MACRO( T(ESC), D(LSHIFT), T(SCLN), U(LSHIFT), T(W), T(Q) );
+    // VI Write
+    type_code(KC_ESC);
+    wait_ms(30);
+    register_code(KC_LSHIFT);
+    type_code(KC_SCLN);
+    unregister_code(KC_LSHIFT);
+    type_code(KC_W);
+    type_code(KC_ENT);
   }
   else if (state->count == 2)
   {
-    // Quit Out
-    MACRO( T(ESC), D(LSHIFT), T(SCLN), U(LSHIFT), T(Q), D(LSHIFT), T(1), U(LSHIFT) );
+    // VI Write Quit
+    type_code(KC_ESC);
+    wait_ms(30);
+    register_code(KC_LSHIFT);
+    type_code(KC_SCLN);
+    unregister_code(KC_LSHIFT);
+    type_code(KC_W);
+    type_code(KC_Q);
+    type_code(KC_ENT);
+  }
+  else if (state->count == 3)
+  {
+    // VI Quit Out
+    type_code(KC_ESC);
+    wait_ms(30);
+    register_code(KC_LSHIFT);
+    type_code(KC_SCLN);
+    unregister_code(KC_LSHIFT);
+    type_code(KC_Q);
+    register_code(KC_LSHIFT);
+    type_code(KC_1);
+    unregister_code(KC_LSHIFT);
+    type_code(KC_ENT);
+  }
+}
+
+void at_lock(qk_tap_dance_state_t *state, void *user_data)
+{
+  if (state->count == 1)
+  {
+    // Send @
+    register_code(KC_LSFT);
+    register_code(KC_2);
+    unregister_code(KC_2);
+    unregister_code(KC_LSFT);
+  }
+  else if (state->count == 2)
+  {
+    // Lock screen
+    register_code(KC_LCTL);
+    register_code(KC_LSFT);
+    //register_code(KC_EJCT);
+    //register_code(0x7f);
+    register_code(KC_PWR);
+    wait_ms(500);
+    unregister_code(KC_PWR);
+    //unregister_code(KC_EJCT);
+    unregister_code(KC_LSFT);
+    unregister_code(KC_LCTL);
+  }
+}
+
+void esc_caps(qk_tap_dance_state_t *state, void *user_data)
+{
+  if (state->count == 1)
+  {
+    // Send ESC
+    register_code(KC_ESC);
+    unregister_code(KC_ESC);
+  }
+  else if (state->count == 2)
+  {
+    // Send Caps Lock
+    register_code(KC_CAPS);
+    wait_ms(500);
+    unregister_code(KC_CAPS);
   }
 }
 
 
 qk_tap_dance_action_t tap_dance_actions[] = {
-  [TD_ESC_CAPS]  = ACTION_TAP_DANCE_DOUBLE(KC_ESC, KC_CAPS),
+  [TD_ESC_CAPS]  = ACTION_TAP_DANCE_FN(esc_caps),
   [CT_SPC_ENT]   = ACTION_TAP_DANCE_DOUBLE(KC_SPC, KC_ENT),
   [CT_CPY_PST]   = ACTION_TAP_DANCE_FN(copy_paste),
   [CT_CLS_QIT]   = ACTION_TAP_DANCE_FN(close_quit),
-  [TD_AT_CLOSE]  = ACTION_TAP_DANCE_DOUBLE(KC_AT, KC_INS),
+  [TD_AT_CLOSE]  = ACTION_TAP_DANCE_FN(at_lock),
   [TD_VI_QUIT]   = ACTION_TAP_DANCE_FN(vi_quit)
 };
 
@@ -455,6 +528,11 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
             if (record->event.pressed) {
                 return MACRO( D(LGUI), T(S), U(LGUI), END);
             }  
+            break;
+        case MC_LOCK:
+            if (record->event.pressed) {
+                return MACRO( D(LCTL), D(LSFT), D(EJCT), W(10), U(EJCT), U(LSFT), U(LCTL), END);
+            }
             break;
         //case 0: {
         //    if (record->event.pressed) {
