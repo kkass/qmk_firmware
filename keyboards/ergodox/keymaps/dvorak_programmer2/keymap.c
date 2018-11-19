@@ -62,7 +62,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *   |  CTL  |  ALT |  L1  | Left | Right|                                     |  Up  | Down |  L1  |  CTL |  ALT  |
  *   `-----------------------------------'                                     `----------------------------------'
  *                                        ,-------------.       ,---------------.
- *                                        |      |  L2  |       |Esc/Caps|      |
+ *                                        |  DEL |  L2  |       |Esc/Caps|      |
  *                                 ,------|------|------|       |--------+------+------.
  *                                 |      |  CP  | Home |       |  PgUp  |      |      |
  *                                 | BkSp |  PST |------|       |--------|Enter | Space|
@@ -76,25 +76,25 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        TD(CT_CLS_QIT),KC_SCLN,        KC_COMM,       KC_DOT,        KC_P,          KC_Y,           _______,
        KC_LSHIFT,     KC_A,           KC_O,          KC_E,          KC_U,          KC_I,
        GUI_T(KC_GRV), KC_QUOT,        KC_Q,          KC_J,          KC_K,          KC_X,           KC_HYPR,
- 
+
        // lower keys
                       KC_LCTRL,       KC_LALT,       TG(SYMBOL),    KC_LEFT,       KC_RGHT,
- 
+
        // thumb cluster
-                                                                                   _______,        TG(KEY_NAV),
+                                                                                   KC_DEL,         TG(KEY_NAV),
                                                                                                    KC_HOME,
                                                                     KC_BSPC,       TD(CT_CPY_PST), KC_END,
- 
+
        // right hand
        //KC_RGHT,       F(KEY_0_ASTR),  F(KEY_2_RPRN), F(KEY_4_PLUS), F(KEY_6_RBRK), F(KEY_8_EXLM),   TD(TD_AT_CLOSE),
        M(MC_SAVE),    M(MC_UNDO),     M(MC_REDO),    _______,       _______,       _______,         TD(TD_AT_CLOSE),
        KC_MINS,       KC_F,           KC_G,          KC_C,          KC_R,          KC_L,            KC_HASH,
                       KC_D,           KC_H,          KC_T,          KC_N,          KC_S,            SFT_T(KC_BSLS),
        MEH_T(KC_TAB), KC_B,           KC_M,          KC_W,          KC_V,          KC_Z,            GUI_T(KC_SLSH),
- 
+
        // lower keys
                       KC_UP,          KC_DOWN,       OSL(SYMBOL),   KC_LCTRL,      KC_LALT,
- 
+
        // thumb cluster
        TD(TD_ESC_CAPS), _______,
        KC_PGUP,
@@ -128,10 +128,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        LCTL(KC_F16),  KC_AMPR,        KC_AT,         KC_LCBR,       KC_RCBR,       KC_EXLM,        KC_PIPE,
        KC_F16,        KC_HASH,        KC_DLR,        KC_LPRN,       KC_RPRN,       KC_GRV,
        _______,       KC_PERC,        KC_CIRC,       KC_LBRC,       KC_RBRC,       KC_TILD,        KC_QUES,
- 
+
        // lower keys
                       KC_LCTRL,       KC_LALT,       _______,       KC_LEFT,       KC_RGHT,
- 
+
        // thumb cluster
                                                                                    _______,        _______,
                                                                                                    _______,
@@ -142,9 +142,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        _______,       KC_UP,          KC_7,          KC_8,          KC_9,          KC_ASTR,        KC_F12,
                       KC_DOWN,        KC_4,          KC_5,          KC_6,          KC_PLUS,        _______,
        _______,       KC_DOT,         KC_1,          KC_2,          KC_3,          KC_BSLS,        KC_SLSH,
- 
+
                       KC_0,           KC_DOT,        _______,       KC_EQL,        _______,
- 
+
        // thumb cluster
        _______,       _______,
        _______,
@@ -305,7 +305,7 @@ static void doNumber( bool pressed, uint16_t hasShift, uint16_t key1, uint16_t k
 void action_function(keyrecord_t *record, uint8_t id, uint8_t opt) {
   //bool    hasShift     =  get_mods() & ( LSHIFT|RSHIFT );
   uint16_t  hasShift     = get_mods() & ( MOD_BIT(KC_LSFT) | MOD_BIT(KC_RSFT) );
-  
+
   //if (keyboard_report->mods & MOD_BIT(KC_LSFT) ||
   //    ((get_oneshot_mods() & MOD_BIT(KC_LSFT)) && !has_oneshot_mods_timed_out())) {
   //  if (record->event.pressed)
@@ -507,27 +507,27 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
         case MC_CUT_LINE:
             if (record->event.pressed) {
                 return MACRO( T(HOME), D(LSFT), T(END), U(LSFT), D(LCTL), T(X), U(LCTL), END);
-            }        
+            }
             break;
         case MC_PASTE_LINE:
             if (record->event.pressed) {
                 return MACRO( T(END), T(ENTER), D(LCTL), T(V), U(LCTL), END);
-            }                
+            }
             break;
         case MC_UNDO:
             if (record->event.pressed) {
                 return MACRO( D(LGUI), T(Z), U(LGUI), END);
-            }  
+            }
             break;
         case MC_REDO:
             if (record->event.pressed) {
                 return MACRO( D(LGUI), D(LSHIFT), T(Z), U(LSHIFT), U(LGUI), END);
-            }  
+            }
             break;
         case MC_SAVE:
             if (record->event.pressed) {
                 return MACRO( D(LGUI), T(S), U(LGUI), END);
-            }  
+            }
             break;
         case MC_LOCK:
             if (record->event.pressed) {
@@ -548,7 +548,7 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
         //    }
         //    break;
         //}
-            
+
       }
     return MACRO_NONE;
 }
@@ -587,6 +587,6 @@ void matrix_scan_user(void) {
         default:
             // none
             break;
-    } 
+    }
     return;
 };

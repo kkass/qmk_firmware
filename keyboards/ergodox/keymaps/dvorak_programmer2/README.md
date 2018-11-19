@@ -1,7 +1,7 @@
 Dvorak Programmer Layout
 ========================
 
-This is a dvorak-only layout. 
+This is a dvorak-only layout.
 
 Layers
 ------
@@ -29,7 +29,7 @@ docker run -e keymap=dvorak_programmer2 -e subproject=ez -e keyboard=ergodox --r
  *   |  CTL  |  ALT |  L1  | Left | Right|                                     |  Up  | Down |  L1  |  CTL |  ALT  |
  *   `-----------------------------------'                                     `----------------------------------'
  *                                        ,-------------.       ,---------------.
- *                                        |      |  L2  |       |Esc/Caps|      |
+ *                                        |  DEL |  L2  |       |Esc/Caps|      |
  *                                 ,------|------|------|       |--------+------+------.
  *                                 |      |  CP  | Home |       |  PgUp  |      |      |
  *                                 | BkSp |  PST |------|       |--------|Enter | Space|
