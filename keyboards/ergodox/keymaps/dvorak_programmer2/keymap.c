@@ -23,16 +23,6 @@
 #define MC_SAVE                                          5
 #define MC_LOCK                                          6
 
-#define KEY_7_LBRK                                       0
-#define KEY_5_LCBR                                       1
-#define KEY_3_RCBR                                       2
-#define KEY_1_LPRN                                       3
-#define KEY_9_EQLS                                       4
-#define KEY_0_ASTR                                       5
-#define KEY_2_RPRN                                       6
-#define KEY_4_PLUS                                       7
-#define KEY_6_RBRK                                       8
-#define KEY_8_EXLM                                       9
 
 #define TD_ESC_CAPS                                      0
 #define CT_SPC_ENT                                       1
@@ -71,7 +61,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [BASE] = KEYMAP(
        // left hand
-       //TD(CT_CPY_PST),F(KEY_7_LBRK),  F(KEY_5_LCBR), F(KEY_3_RCBR), F(KEY_1_LPRN), F(KEY_9_EQLS),  KC_LEFT,
        KC_F13,        KC_F1,          KC_F2,         KC_F3,         KC_F4,         KC_F5,          TD(TD_VI_QUIT),
        TD(CT_CLS_QIT),KC_SCLN,        KC_COMM,       KC_DOT,        KC_P,          KC_Y,           _______,
        KC_LSHIFT,     KC_A,           KC_O,          KC_E,          KC_U,          KC_I,
@@ -86,7 +75,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                                     KC_BSPC,       TD(CT_CPY_PST), KC_END,
 
        // right hand
-       //KC_RGHT,       F(KEY_0_ASTR),  F(KEY_2_RPRN), F(KEY_4_PLUS), F(KEY_6_RBRK), F(KEY_8_EXLM),   TD(TD_AT_CLOSE),
        M(MC_SAVE),    M(MC_UNDO),     M(MC_REDO),    _______,       _______,       _______,         TD(TD_AT_CLOSE),
        KC_MINS,       KC_F,           KC_G,          KC_C,          KC_R,          KC_L,            KC_HASH,
                       KC_D,           KC_H,          KC_T,          KC_N,          KC_S,            SFT_T(KC_BSLS),
@@ -246,106 +234,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 };
 
-const uint16_t PROGMEM fn_actions[] = {
-  [KEY_7_LBRK] = ACTION_FUNCTION(KEY_7_LBRK),
-  [KEY_5_LCBR] = ACTION_FUNCTION(KEY_5_LCBR),
-  [KEY_3_RCBR] = ACTION_FUNCTION(KEY_3_RCBR),
-  [KEY_1_LPRN] = ACTION_FUNCTION(KEY_1_LPRN),
-  [KEY_9_EQLS] = ACTION_FUNCTION(KEY_9_EQLS),
-  [KEY_0_ASTR] = ACTION_FUNCTION(KEY_0_ASTR),
-  [KEY_2_RPRN] = ACTION_FUNCTION(KEY_2_RPRN),
-  [KEY_4_PLUS] = ACTION_FUNCTION(KEY_4_PLUS),
-  [KEY_6_RBRK] = ACTION_FUNCTION(KEY_6_RBRK),
-  [KEY_8_EXLM] = ACTION_FUNCTION(KEY_8_EXLM)
-};
-
-/*
- *  bit |0       |1       |2       |3       |4       |5       |6       |7
- * -----+--------+--------+--------+--------+--------+--------+--------+--------
- * desc |Lcontrol|Lshift  |Lalt    |Lgui    |Rcontrol|Rshift  |Ralt    |Rgui
- *
- */
- #define LSHIFT  0x02
- #define RSHIFT  0x20
-
-static void doNumber( bool pressed, uint16_t hasShift, uint16_t key1, uint16_t key2 ) {
-
-    //ergodox_right_led_2_off();
-    //ergodox_right_led_3_off();
-    if (pressed) {
-      /* The key is being pressed.
-       */
-      if (hasShift) {
-        ergodox_right_led_2_on();
-        //register_code (KC_RSFT); TAP_ONCE (KC_MINS); TAP_ONCE (KC_9); unregister_code (KC_RSFT);
-        del_mods(hasShift);
-        add_key(key2);
-        send_keyboard_report();
-        del_mods(hasShift);
-      } else {
-        ergodox_right_led_3_on();
-        add_key(key1);
-        send_keyboard_report();
-      }
-    } else {
-      /* The key is being released.
-       */
-      if (hasShift) {
-        ergodox_right_led_2_off();
-        del_key(key2);
-        send_keyboard_report();
-      } else {
-        ergodox_right_led_3_off();
-        del_key(key1);
-        send_keyboard_report();
-      }
-    }
-}
-
-void action_function(keyrecord_t *record, uint8_t id, uint8_t opt) {
-  //bool    hasShift     =  get_mods() & ( LSHIFT|RSHIFT );
-  uint16_t  hasShift     = get_mods() & ( MOD_BIT(KC_LSFT) | MOD_BIT(KC_RSFT) );
-
-  //if (keyboard_report->mods & MOD_BIT(KC_LSFT) ||
-  //    ((get_oneshot_mods() & MOD_BIT(KC_LSFT)) && !has_oneshot_mods_timed_out())) {
-  //  if (record->event.pressed)
-  //    shifted[idx] = true;
-  //}
-  //action_t action = store_or_get_action(record->event.pressed, record->event.key);
-
-  switch (id) {
-    case KEY_7_LBRK:
-        doNumber( record->event.pressed, hasShift, KC_LBRACKET, KC_7 );
-        break;
-    case KEY_5_LCBR:
-        doNumber( record->event.pressed, hasShift, KC_LCBR,     KC_5 );
-        break;
-    case KEY_3_RCBR:
-        doNumber( record->event.pressed, hasShift, KC_RCBR,     KC_3 );
-        break;
-    case KEY_1_LPRN:
-        doNumber( record->event.pressed, hasShift, KC_LPRN,     KC_1 );
-        break;
-    case KEY_9_EQLS:
-        doNumber( record->event.pressed, hasShift, KC_EQL,      KC_9 );
-        break;
-    case KEY_0_ASTR:
-        doNumber( record->event.pressed, hasShift, KC_ASTR,     KC_0 );
-        break;
-    case KEY_2_RPRN:
-        doNumber( record->event.pressed, hasShift, KC_RPRN,     KC_2 );
-        break;
-    case KEY_4_PLUS:
-        doNumber( record->event.pressed, hasShift, KC_PLUS,     KC_4 );
-        break;
-    case KEY_6_RBRK:
-        doNumber( record->event.pressed, hasShift, KC_RBRACKET, KC_6 );
-        break;
-    case KEY_8_EXLM:
-        doNumber( record->event.pressed, hasShift, KC_EXLM,     KC_8 );
-        break;
-  }
-}
 
 //Tap Dance Definitions
 
@@ -534,20 +422,6 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
                 return MACRO( D(LCTL), D(LSFT), D(EJCT), W(10), U(EJCT), U(LSFT), U(LCTL), END);
             }
             break;
-        //case 0: {
-        //    if (record->event.pressed) {
-        //        key_timer = timer_read(); // if the key is being pressed, we start the timer.
-        //    }
-        //    else { // this means the key was just released, so we can figure out how long it was pressed for (tap or "held down").
-        //        if (timer_elapsed(key_timer) > 150) { // 150 being 150ms, the threshhold we pick for counting something as a tap.
-        //            return MACRO( D(LCTL), T(C), U(LCTL), END  );
-        //        }
-        //        else {
-        //            return MACRO( D(LCTL), T(V), U(LCTL), END  );
-        //        }
-        //    }
-        //    break;
-        //}
 
       }
     return MACRO_NONE;
