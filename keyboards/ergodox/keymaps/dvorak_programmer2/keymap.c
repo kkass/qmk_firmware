@@ -235,141 +235,51 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 
+
 //Tap Dance Definitions
+#define ACTION_FUNCTION_START(NAME) \
+void NAME (qk_tap_dance_state_t *state, void *user_data) \
+{ \
+    switch (state->count) \
+    {
 
-void copy_paste(qk_tap_dance_state_t *state, void *user_data)
-{
-  if ( state->count == 1 )
-  {
-    // Copy
-    register_code(KC_LGUI);
-    register_code(KC_C);
-    unregister_code(KC_C);
-    unregister_code(KC_LGUI);
-  }
-  else if ( state->count == 2 )
-  {
-    // Paste
-    register_code(KC_LGUI);
-    register_code(KC_V);
-    unregister_code(KC_V);
-    unregister_code(KC_LGUI);
-  }
-  else if ( state->count == 3 )
-  {
-    // Cut
-    register_code(KC_LGUI);
-    register_code(KC_X);
-    unregister_code(KC_X);
-    unregister_code(KC_LGUI);
-  }
+
+#define ACTION_FUNCTION_END() \
+    default: break; \
+    } \
 }
 
-void close_quit(qk_tap_dance_state_t *state, void *user_data)
-{
-  if (state->count == 2)
-  {
-    // Close Window
-    register_code(KC_LGUI);
-    register_code(KC_W);
-    unregister_code(KC_W);
-    unregister_code(KC_LGUI);
-  }
-  else if (state->count == 3)
-  {
-    // Quit App
-    register_code(KC_LGUI);
-    register_code(KC_Q);
-    unregister_code(KC_Q);
-    unregister_code(KC_LGUI);
-  }
-}
+#define ACTION_FUNCTION_MACRO(COUNT, ...) \
+    case COUNT: \
+        action_macro_play(MACRO(__VA_ARGS__, END)); \
+        break;
 
-#define type_code(X)  register_code(X); unregister_code(X)
+ACTION_FUNCTION_START(copy_paste)
+ACTION_FUNCTION_MACRO(1, D(LGUI), T(C), U(LGUI))
+ACTION_FUNCTION_MACRO(2, D(LGUI), T(V), U(LGUI))
+ACTION_FUNCTION_MACRO(3, D(LGUI), T(X), U(LGUI))
+ACTION_FUNCTION_END()
 
-void vi_quit(qk_tap_dance_state_t *state, void *user_data)
-{
-  if (state->count == 1)
-  {
-    // VI Write
-    type_code(KC_ESC);
-    wait_ms(30);
-    register_code(KC_LSHIFT);
-    type_code(KC_SCLN);
-    unregister_code(KC_LSHIFT);
-    type_code(KC_W);
-    type_code(KC_ENT);
-  }
-  else if (state->count == 2)
-  {
-    // VI Write Quit
-    type_code(KC_ESC);
-    wait_ms(30);
-    register_code(KC_LSHIFT);
-    type_code(KC_SCLN);
-    unregister_code(KC_LSHIFT);
-    type_code(KC_W);
-    type_code(KC_Q);
-    type_code(KC_ENT);
-  }
-  else if (state->count == 3)
-  {
-    // VI Quit Out
-    type_code(KC_ESC);
-    wait_ms(30);
-    register_code(KC_LSHIFT);
-    type_code(KC_SCLN);
-    unregister_code(KC_LSHIFT);
-    type_code(KC_Q);
-    register_code(KC_LSHIFT);
-    type_code(KC_1);
-    unregister_code(KC_LSHIFT);
-    type_code(KC_ENT);
-  }
-}
+ACTION_FUNCTION_START(close_quit)
+ACTION_FUNCTION_MACRO(2, D(LGUI), T(W), U(LGUI))
+ACTION_FUNCTION_MACRO(3, D(LGUI), T(Q), U(LGUI))
+ACTION_FUNCTION_END()
 
-void at_lock(qk_tap_dance_state_t *state, void *user_data)
-{
-  if (state->count == 1)
-  {
-    // Send @
-    register_code(KC_LSFT);
-    register_code(KC_2);
-    unregister_code(KC_2);
-    unregister_code(KC_LSFT);
-  }
-  else if (state->count == 2)
-  {
-    // Lock screen
-    register_code(KC_LCTL);
-    register_code(KC_LSFT);
-    //register_code(KC_EJCT);
-    //register_code(0x7f);
-    register_code(KC_PWR);
-    wait_ms(500);
-    unregister_code(KC_PWR);
-    //unregister_code(KC_EJCT);
-    unregister_code(KC_LSFT);
-    unregister_code(KC_LCTL);
-  }
-}
+ACTION_FUNCTION_START(vi_quit)
+ACTION_FUNCTION_MACRO(1, T(ESC), W(30), D(LSFT), T(SCLN), U(LSFT), T(W), T(ENT))
+ACTION_FUNCTION_MACRO(2, T(ESC), W(30), D(LSFT), T(SCLN), U(LSFT), T(W), T(Q), T(ENT))
+ACTION_FUNCTION_MACRO(3, T(ESC), W(30), D(LSFT), T(SCLN), U(LSFT), T(Q), D(LSFT), T(1), U(LSFT), T(ENT))
+ACTION_FUNCTION_END()
 
-void esc_caps(qk_tap_dance_state_t *state, void *user_data)
-{
-  if (state->count == 1)
-  {
-    // Send ESC
-    register_code(KC_ESC);
-    unregister_code(KC_ESC);
-  }
-  else if (state->count == 2)
-  {
-    // Send Caps Lock
-    register_code(KC_CAPS);
-    wait_ms(500);
-    unregister_code(KC_CAPS);
-  }
-}
+ACTION_FUNCTION_START(at_lock)
+ACTION_FUNCTION_MACRO(1, D(LSFT), T(2), U(LSFT))
+ACTION_FUNCTION_MACRO(2, D(LCTL), D(LSFT), D(PWR), W(255), W(255), U(PWR), U(LSFT), U(LCTL))
+ACTION_FUNCTION_END()
+
+ACTION_FUNCTION_START(esc_caps)
+ACTION_FUNCTION_MACRO(1, T(ESC))
+ACTION_FUNCTION_MACRO(2, D(CAPS), W(255), U(CAPS))
+ACTION_FUNCTION_END()
 
 
 qk_tap_dance_action_t tap_dance_actions[] = {
