@@ -381,49 +381,27 @@ qk_tap_dance_action_t tap_dance_actions[] = {
   [TD_VI_QUIT]   = ACTION_TAP_DANCE_FN(vi_quit)
 };
 
+#define MACRO_ON_PRESS(ID, ...) \
+    case ID: \
+        if (record->event.pressed) { \
+            return MACRO(__VA_ARGS__, END); \
+        } \
+        break;
+
 
 const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
 {
-  // MACRODOWN only works in this function
-      switch(id) {
+    switch(id) {
 
-        case MC_COPY_LINE:
-            if (record->event.pressed) {
-                return MACRO( T(HOME), D(LSFT), T(END), U(LSFT), D(LCTL), T(C), U(LCTL), END);
-            }
-            break;
-        case MC_CUT_LINE:
-            if (record->event.pressed) {
-                return MACRO( T(HOME), D(LSFT), T(END), U(LSFT), D(LCTL), T(X), U(LCTL), END);
-            }
-            break;
-        case MC_PASTE_LINE:
-            if (record->event.pressed) {
-                return MACRO( T(END), T(ENTER), D(LCTL), T(V), U(LCTL), END);
-            }
-            break;
-        case MC_UNDO:
-            if (record->event.pressed) {
-                return MACRO( D(LGUI), T(Z), U(LGUI), END);
-            }
-            break;
-        case MC_REDO:
-            if (record->event.pressed) {
-                return MACRO( D(LGUI), D(LSHIFT), T(Z), U(LSHIFT), U(LGUI), END);
-            }
-            break;
-        case MC_SAVE:
-            if (record->event.pressed) {
-                return MACRO( D(LGUI), T(S), U(LGUI), END);
-            }
-            break;
-        case MC_LOCK:
-            if (record->event.pressed) {
-                return MACRO( D(LCTL), D(LSFT), D(EJCT), W(10), U(EJCT), U(LSFT), U(LCTL), END);
-            }
-            break;
+        MACRO_ON_PRESS(MC_COPY_LINE, T(HOME), D(LSFT), T(END), U(LSFT), D(LCTL), T(C), U(LCTL));
+        MACRO_ON_PRESS(MC_CUT_LINE, T(HOME), D(LSFT), T(END), U(LSFT), D(LCTL), T(X), U(LCTL));
+        MACRO_ON_PRESS(MC_PASTE_LINE, T(ENTER), D(LCTL), T(V), U(LCTL));
+        MACRO_ON_PRESS(MC_UNDO, D(LGUI), T(Z), U(LGUI));
+        MACRO_ON_PRESS(MC_REDO, D(LGUI), D(LSHIFT), T(Z), U(LSHIFT), U(LGUI));
+        MACRO_ON_PRESS(MC_SAVE, D(LGUI), T(S), U(LGUI));
+        MACRO_ON_PRESS(MC_LOCK, D(LCTL), D(LSFT), D(EJCT), W(10), U(EJCT), U(LSFT), U(LCTL));
 
-      }
+    }
     return MACRO_NONE;
 }
 
